@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 function Layout() {
   return (
     <div>
       <header>
         <nav>
-          <a href="/">{{ project_name }}</a>
+          <Link to="/">{{ project_name }}</Link>
         </nav>
       </header>
       <main>

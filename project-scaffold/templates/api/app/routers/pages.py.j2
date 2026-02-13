@@ -1,10 +1,13 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dependencies import get_db
 from app.models.user import User
+{% if include_auth %}
+from app.auth.jwt import get_password_hash
+{% endif %}
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -17,6 +20,31 @@ async def index(request: Request):
 
 @router.get("/users")
 async def users_page(request: Request, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(User))
+    users = result.scalars().all()
+    return templates.TemplateResponse(
+        "partials/user_list.html",
+        {"request": request, "users": users},
+    )
+
+
+@router.post("/users")
+async def create_user_form(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+{% if include_auth %}
+    password: str = Form(...),
+{% endif %}
+    db: AsyncSession = Depends(get_db),
+):
+    user = User(name=name, email=email)
+{% if include_auth %}
+    user.hashed_password = get_password_hash(password)
+{% endif %}
+    db.add(user)
+    await db.commit()
+
     result = await db.execute(select(User))
     users = result.scalars().all()
     return templates.TemplateResponse(

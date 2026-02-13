@@ -7,6 +7,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+{% if is_multi_repo %}
+    defaults:
+      run:
+        working-directory: {{ project_name }}-api
+{% endif %}
     services:
       postgres:
         image: postgres:16-alpine

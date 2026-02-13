@@ -26,6 +26,7 @@ migration:
 	uv run alembic revision --autogenerate -m "$(msg)"
 {% endif %}
 {% endif %}
+
 test:
 {% if is_multi_repo %}
 	cd {{ project_name }}-api && uv run pytest -v

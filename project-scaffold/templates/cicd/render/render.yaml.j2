@@ -20,7 +20,7 @@ services:
   - type: web
     name: {{ project_name }}-frontend
     runtime: static
-    buildCommand: npm ci && npm run build
+    buildCommand: npm install && npm run build
     staticPublishPath: dist
     rootDir: {{ project_name }}-frontend
     routes:

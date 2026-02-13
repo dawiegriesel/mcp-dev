@@ -7,15 +7,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+{% if is_multi_repo %}
+    defaults:
+      run:
+        working-directory: {{ project_name }}-frontend
+{% endif %}
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "npm"
 
-      - run: npm ci
+      - run: npm install
 
       - name: Lint
         run: npm run lint
