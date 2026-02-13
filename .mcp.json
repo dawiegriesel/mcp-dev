@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "project-scaffold": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "/Users/dawiegriesel/Documents/GitHub/mcp-dev",
+        "project-scaffold"
+      ]
+    }
+  }
+}
