@@ -1,6 +1,6 @@
 from pathlib import Path
 
-TEMPLATES_DIR = Path(__file__).parent.parent.parent / "templates"
+TEMPLATES_DIR = Path(__file__).parent / "templates"
 
 SCAFFOLD_METADATA_FILE = ".scaffold.json"
 

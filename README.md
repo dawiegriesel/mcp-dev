@@ -28,10 +28,25 @@ Every scaffolded project comes with:
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/) (recommended) or pip
 
-## Setup
+## Installation
+
+### From GitHub (pip)
 
 ```bash
-cd project-scaffold
+pip install git+https://github.com/dawiegriesel/mcp-dev.git
+```
+
+### From GitHub (uv)
+
+```bash
+uv pip install git+https://github.com/dawiegriesel/mcp-dev.git
+```
+
+### Local development
+
+```bash
+git clone https://github.com/dawiegriesel/mcp-dev.git
+cd mcp-dev
 uv sync
 ```
 
@@ -46,7 +61,13 @@ uv sync --extra dev
 ### Claude Code
 
 ```bash
-claude mcp add project-scaffold -- uv run --directory /absolute/path/to/project-scaffold python -m project_scaffold
+claude mcp add project-scaffold -- uvx --from "git+https://github.com/dawiegriesel/mcp-dev.git" project-scaffold
+```
+
+Or if installed locally:
+
+```bash
+claude mcp add project-scaffold -- uv run --directory /path/to/mcp-dev project-scaffold
 ```
 
 ### Claude Desktop
@@ -57,11 +78,10 @@ Add this to your Claude Desktop config file (`~/Library/Application Support/Clau
 {
   "mcpServers": {
     "project-scaffold": {
-      "command": "uv",
+      "command": "uvx",
       "args": [
-        "run",
-        "--directory", "/absolute/path/to/project-scaffold",
-        "python", "-m", "project_scaffold"
+        "--from", "git+https://github.com/dawiegriesel/mcp-dev.git",
+        "project-scaffold"
       ]
     }
   }
@@ -73,10 +93,14 @@ Add this to your Claude Desktop config file (`~/Library/Application Support/Clau
 Run the server with stdio transport (the default):
 
 ```bash
-uv run --directory /absolute/path/to/project-scaffold python -m project_scaffold
+project-scaffold
 ```
 
-Replace `/absolute/path/to/project-scaffold` with the actual path where you cloned the repo.
+Or without installing:
+
+```bash
+uvx --from "git+https://github.com/dawiegriesel/mcp-dev.git" project-scaffold
+```
 
 ## MCP tools
 
@@ -236,20 +260,19 @@ uv run pytest
 ```
 src/project_scaffold/
 ├── __main__.py          # Entry point — runs mcp.run()
-├── server.py            # FastMCP server with 5 tool definitions
+├── server.py            # FastMCP server with 5 tool definitions + main()
 ├── models.py            # Pydantic models (ProjectConfig, ComponentConfig)
 ├── config.py            # Constants, type maps, template paths
 ├── generator.py         # Core engine — renders Jinja2 templates to disk
-└── renderers/
-    └── api.py           # Component generators (add_router, add_model)
-
-templates/               # Jinja2 templates organized by category
-├── api/                 # FastAPI backend
-├── frontend/react/      # React + Vite + TypeScript
-├── frontend/htmx/       # HTMX + Tailwind
-├── docker/              # Docker Compose
-├── cicd/azure/          # GitHub Actions for Azure
-├── cicd/render/         # Render.com blueprint
-├── alembic/             # Database migrations
-└── common/              # README, Makefile, .env, .gitignore
+├── renderers/
+│   └── api.py           # Component generators (add_router, add_model)
+└── templates/           # Jinja2 templates (included in package)
+    ├── api/             # FastAPI backend
+    ├── frontend/react/  # React + Vite + TypeScript
+    ├── frontend/htmx/   # HTMX + Tailwind
+    ├── docker/          # Docker Compose
+    ├── cicd/azure/      # GitHub Actions for Azure
+    ├── cicd/render/     # Render.com blueprint
+    ├── alembic/         # Database migrations
+    └── common/          # README, Makefile, .env, .gitignore
 ```

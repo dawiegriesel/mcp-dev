@@ -112,3 +112,7 @@ def get_project_info(
     """
     generator = ProjectGenerator.from_existing(project_dir)
     return generator.info()
+
+
+def main():
+    mcp.run()
