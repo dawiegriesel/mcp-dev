@@ -47,6 +47,11 @@ uv run pytest
 - Type annotations throughout, `from __future__ import annotations` in most files
 - `TYPE_CHECKING` guard for circular imports in renderers
 
+## Dev tooling
+
+- `.mcp.json` — project-scoped MCP config; loads this server automatically in Claude Code. Contains a hardcoded absolute path (`--directory`) that must match your local clone.
+- `.claude/agents/docs-pre-commit.md` — agent that updates CHANGELOG.md, README.md, and CLAUDE.md before commits. Trigger: "Update docs before I commit."
+
 ## Template structure
 
 Templates are `.j2` Jinja2 files under `src/project_scaffold/templates/`. Main categories:

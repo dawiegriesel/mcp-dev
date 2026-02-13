@@ -70,6 +70,23 @@ Or if installed locally:
 claude mcp add project-scaffold -- uv run --directory /path/to/mcp-dev project-scaffold
 ```
 
+#### Project-scoped config (local development)
+
+This repo includes a `.mcp.json` that registers the server automatically when you open the repo in Claude Code — no manual `claude mcp add` needed. The file uses an absolute path, so you need to update it to match your local clone location:
+
+```json
+{
+  "mcpServers": {
+    "project-scaffold": {
+      "command": "uv",
+      "args": ["run", "--directory", "/your/local/path/mcp-dev", "project-scaffold"]
+    }
+  }
+}
+```
+
+Update the `--directory` value to your actual clone path before using it.
+
 ### Claude Desktop
 
 Add this to your Claude Desktop config file (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS, `%APPDATA%\Claude\claude_desktop_config.json` on Windows):
@@ -254,6 +271,12 @@ uv run ruff format src/
 # Test
 uv run pytest
 ```
+
+### Automated documentation updates
+
+This repo includes a `docs-pre-commit` Claude agent (`.claude/agents/docs-pre-commit.md`). When working in Claude Code, it triggers automatically before commits to update CHANGELOG.md, README.md, and CLAUDE.md to reflect the changes being committed.
+
+To trigger it manually, tell Claude: "Update the documentation before I commit."
 
 ## Architecture
 
