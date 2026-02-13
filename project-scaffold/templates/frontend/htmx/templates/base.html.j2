@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% raw %}{% block title %}{% endblock %} - {{ project_name }}{% endraw %}</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% raw %}{{ url_for('static', path='css/style.css') }}{% endraw %}">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <a href="/" class="text-xl font-semibold text-gray-900">{{ project_name }}</a>
+        </div>
+    </nav>
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        {% raw %}{% block content %}{% endblock %}{% endraw %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% raw %}{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <h1 class="text-3xl font-bold text-gray-900">{% endraw %}{{ project_name }}{% raw %}</h1>
+    <p class="text-gray-600">{% endraw %}{{ description }}{% raw %}</p>
+
+    <div class="mt-8">
+        <h2 class="text-xl font-semibold mb-4">Users</h2>
+        <div
+            hx-get="/users"
+            hx-trigger="load"
+            hx-swap="innerHTML"
+            class="bg-white rounded-lg shadow p-6"
+        >
+            <p class="text-gray-500">Loading...</p>
+        </div>
+    </div>
+</div>
+{% endblock %}{% endraw %}

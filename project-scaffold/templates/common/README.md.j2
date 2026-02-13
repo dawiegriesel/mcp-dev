@@ -1,0 +1,90 @@
+# {{ project_name }}
+
+{{ description }}
+
+## Tech Stack
+
+- **API**: FastAPI + SQLAlchemy (async) + Pydantic v2
+- **Database**: PostgreSQL
+{% if frontend_type == "react" -%}
+- **Frontend**: React + Vite + TypeScript
+{% else -%}
+- **Frontend**: HTMX + Tailwind CSS (server-rendered)
+{% endif -%}
+{% if project_type == "work" -%}
+- **Deployment**: Azure App Service{% if frontend_type == "react" %} + Azure Static Web Apps{% endif %}
+
+{% else -%}
+- **Deployment**: Render.com
+{% endif %}
+
+## Local Development
+
+### Prerequisites
+
+- Docker & Docker Compose
+- Python 3.12+ with [uv](https://docs.astral.sh/uv/)
+{% if frontend_type == "react" -%}
+- Node.js 22+
+{% endif %}
+
+### Getting Started
+
+```bash
+# Copy environment variables
+cp .env.example .env
+# Edit .env with your values
+
+# Start all services
+make up
+
+# View logs
+make logs
+```
+{% if include_alembic %}
+### Database Migrations
+
+```bash
+# Create a new migration
+make migration msg="describe your change"
+
+# Apply migrations
+make migrate
+```
+{% endif %}
+
+### Available Commands
+
+```bash
+make up        # Start docker-compose
+make down      # Stop docker-compose
+make logs      # View logs
+make test      # Run API tests
+make lint      # Run linter
+make format    # Auto-format code
+{% if include_alembic -%}
+make migrate   # Apply database migrations
+make migration # Create a new migration
+{% endif -%}
+{% if frontend_type == "react" -%}
+make frontend-dev    # Run frontend dev server (outside Docker)
+make frontend-build  # Build frontend for production
+{% endif -%}
+```
+
+## API Documentation
+
+Once running, visit:
+- Swagger UI: http://localhost:{{ api_port }}/docs
+- ReDoc: http://localhost:{{ api_port }}/redoc
+{% if frontend_type == "react" %}
+
+## Frontend
+
+Development server: http://localhost:{{ frontend_port }}
+{% else %}
+
+## Application
+
+Visit: http://localhost:{{ api_port }}
+{% endif %}

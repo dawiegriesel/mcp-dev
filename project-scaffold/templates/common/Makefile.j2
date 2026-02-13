@@ -1,0 +1,55 @@
+.PHONY: up down logs build migrate migration test lint format{% if frontend_type == "react" %} frontend-dev frontend-build{% endif %}
+
+up:
+	docker compose up -d
+
+down:
+	docker compose down
+
+logs:
+	docker compose logs -f
+
+build:
+	docker compose build
+{% if include_alembic %}
+migrate:
+{% if is_multi_repo %}
+	cd {{ project_name }}-api && uv run alembic upgrade head
+{% else %}
+	uv run alembic upgrade head
+{% endif %}
+
+migration:
+{% if is_multi_repo %}
+	cd {{ project_name }}-api && uv run alembic revision --autogenerate -m "$(msg)"
+{% else %}
+	uv run alembic revision --autogenerate -m "$(msg)"
+{% endif %}
+{% endif %}
+test:
+{% if is_multi_repo %}
+	cd {{ project_name }}-api && uv run pytest -v
+{% else %}
+	uv run pytest -v
+{% endif %}
+
+lint:
+{% if is_multi_repo %}
+	cd {{ project_name }}-api && uv run ruff check . && uv run ruff format --check .
+{% else %}
+	uv run ruff check . && uv run ruff format --check .
+{% endif %}
+
+format:
+{% if is_multi_repo %}
+	cd {{ project_name }}-api && uv run ruff format .
+{% else %}
+	uv run ruff format .
+{% endif %}
+{% if frontend_type == "react" %}
+frontend-dev:
+	cd {{ project_name }}-frontend && npm run dev
+
+frontend-build:
+	cd {{ project_name }}-frontend && npm run build
+{% endif %}

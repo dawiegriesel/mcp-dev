@@ -1,0 +1,17 @@
+# Database
+DATABASE_URL=postgresql+asyncpg://{{ db_user }}:{{ db_password }}@localhost:5432/{{ db_name }}
+
+# Security
+SECRET_KEY=change-me-in-production
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Environment
+ENVIRONMENT=development
+
+# API
+API_PORT={{ api_port }}
+{% if frontend_type == "react" %}
+# Frontend
+VITE_API_URL=http://localhost:{{ api_port }}
+FRONTEND_PORT={{ frontend_port }}
+{% endif %}

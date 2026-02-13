@@ -1,0 +1,29 @@
+from datetime import datetime
+
+from pydantic import BaseModel, EmailStr, ConfigDict
+
+
+class UserBase(BaseModel):
+    email: EmailStr
+    name: str
+
+
+class UserCreate(UserBase):
+{% if include_auth %}
+    password: str
+{% else %}
+    pass
+{% endif %}
+
+
+class UserUpdate(BaseModel):
+    email: EmailStr | None = None
+    name: str | None = None
+
+
+class UserRead(UserBase):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    created_at: datetime
+    updated_at: datetime

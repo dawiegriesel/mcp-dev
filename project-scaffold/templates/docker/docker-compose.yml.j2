@@ -1,0 +1,56 @@
+services:
+  api:
+    build:
+{% if is_multi_repo %}
+      context: ./{{ project_name }}-api
+{% else %}
+      context: .
+{% endif %}
+      dockerfile: Dockerfile
+    ports:
+      - "{{ api_port }}:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://{{ db_user }}:{{ db_password }}@db:5432/{{ db_name }}
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - ENVIRONMENT=development
+    depends_on:
+      db:
+        condition: service_healthy
+{% if frontend_type == "react" %}
+  frontend:
+    build:
+      context: ./{{ project_name }}-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "{{ frontend_port }}:3000"
+    environment:
+      - VITE_API_URL=http://localhost:{{ api_port }}
+{% endif %}
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER={{ db_user }}
+      - POSTGRES_PASSWORD={{ db_password }}
+      - POSTGRES_DB={{ db_name }}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{ db_user }} -d {{ db_name }}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@local.dev
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

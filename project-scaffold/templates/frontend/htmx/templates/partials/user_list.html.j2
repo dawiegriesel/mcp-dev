@@ -1,0 +1,14 @@
+{% raw %}{% if users %}
+<ul class="divide-y divide-gray-200">
+    {% for user in users %}
+    <li class="py-3 flex justify-between items-center">
+        <div>
+            <p class="font-medium text-gray-900">{{ user.name }}</p>
+            <p class="text-sm text-gray-500">{{ user.email }}</p>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="text-gray-500">No users yet.</p>
+{% endif %}{% endraw %}

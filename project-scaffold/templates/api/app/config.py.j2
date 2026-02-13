@@ -1,0 +1,23 @@
+from pydantic_settings import BaseSettings
+
+
+class Settings(BaseSettings):
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+
+    database_url: str = "postgresql+asyncpg://{{ db_user }}:{{ db_password }}@localhost:5432/{{ db_name }}"
+{% if include_auth %}
+    secret_key: str = "change-me-in-production"
+    access_token_expire_minutes: int = 30
+{% endif %}
+
+    cors_origins: list[str] = [
+{% if frontend_type == "react" %}
+        "http://localhost:{{ frontend_port }}",
+{% endif %}
+        "http://localhost:{{ api_port }}",
+    ]
+
+    environment: str = "development"
+
+
+settings = Settings()
