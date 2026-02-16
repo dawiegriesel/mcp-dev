@@ -2,6 +2,7 @@
 name = "project-scaffold"
 version = "0.1.0"
 description = "MCP server for scaffolding new projects with consistent structure"
+license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
     "fastmcp>=2.0",
