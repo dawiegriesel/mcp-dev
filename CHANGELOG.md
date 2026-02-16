@@ -4,6 +4,18 @@ All notable changes to this project are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.2] — 2026-02-16
+
+### Fixed
+
+- Fix Jinja2 whitespace in Makefile template — blank lines between targets and recipes broke `make` commands
+- Fix Jinja2 whitespace in docker-compose, render.yaml, and Azure CI/CD YAML templates — spurious blank lines broke YAML structure
+- Fix API Dockerfile — copy `app/` source into builder stage so hatchling can build the wheel
+- Fix `pyproject.toml` template — add `[tool.hatch.build.targets.wheel] packages = ["app"]` so hatchling finds the app package
+- Fix `pyproject.toml` template — remove blank lines from Jinja2 conditionals in dependency lists
+- Fix React frontend Dockerfile — use `npm install` fallback when `package-lock.json` doesn't exist (scaffolded projects have no lockfile)
+- Fix `docker-compose.override.yml` template — use Dockerfile `target: builder` for frontend dev so npm is available (production image is nginx-based)
+
 ## [0.3.1] — 2026-02-16
 
 ### Added
