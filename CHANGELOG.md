@@ -4,6 +4,23 @@ All notable changes to this project are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.3.3] — 2026-02-16
+
+### Fixed
+
+- Fix test discovery in scaffolded projects — async fixtures now use `@pytest_asyncio.fixture` (required by pytest-asyncio strict mode)
+- Fix Dockerfile template — copy `pyproject.toml` and `tests/` into final stage so `make test` works
+- Fix `docker-compose.override.yml` template — mount `tests/` and `pyproject.toml` volumes for dev
+- Fix async test isolation — add `engine.dispose()` after teardown and configure connection pool to prevent `InterfaceError`
+- Fix `config.py` template — add `{%-` whitespace control on Jinja2 conditionals
+- Add `[tool.pytest-asyncio]` section to `pyproject.toml` template for pytest-asyncio 1.x compatibility
+
+### Added
+
+- `make git-init` target — initializes git repo(s) in the correct directories (multi-repo and single-repo)
+- README template: project structure diagram and "Cloning on a New Machine" section for multi-repo projects
+- Additional test templates: OpenAPI schema validation and 404 route test
+
 ## [0.3.2] — 2026-02-16
 
 ### Fixed
