@@ -388,6 +388,10 @@ class ProjectGenerator:
 
         self._write(api_root / "alembic.ini", self._render("alembic/alembic.ini.j2"))
         self._write(alembic_dir / "env.py", self._render("alembic/env.py.j2"))
+        self._write(
+            alembic_dir / "script.py.mako",
+            (TEMPLATES_DIR / "alembic" / "script.py.mako").read_text(),
+        )
         self._write_empty(alembic_dir / "versions" / ".gitkeep")
 
     def _generate_auth(self) -> None:
@@ -525,6 +529,7 @@ class ProjectGenerator:
                 [
                     api("alembic.ini"),
                     api("alembic/env.py"),
+                    api("alembic/script.py.mako"),
                     api("alembic/versions/.gitkeep"),
                 ]
             )
