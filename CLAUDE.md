@@ -2,7 +2,7 @@
 
 ## Project overview
 
-MCP server that scaffolds full-stack projects (FastAPI + React/HTMX) with Docker, CI/CD, and database config. Built with FastMCP + Jinja2. Installable as a Python package from GitHub.
+MCP server that scaffolds full-stack projects (FastAPI + React/HTMX) with Docker, CI/CD, and database config. Built with FastMCP + Jinja2. Installable as a Python package from GitHub. Public repo, alpha status, MIT licensed.
 
 ## Commands
 
@@ -49,8 +49,10 @@ uv run pytest
 
 ## Dev tooling
 
-- `.mcp.json` — project-scoped MCP config; loads this server automatically in Claude Code. Contains a hardcoded absolute path (`--directory`) that must match your local clone.
+- `.mcp.json` — gitignored; create locally to auto-register the server in Claude Code (see README for template). Uses a hardcoded absolute path (`--directory`) that must match your local clone.
 - `.claude/agents/docs-pre-commit.md` — agent that updates CHANGELOG.md, README.md, and CLAUDE.md before commits. Trigger: "Update docs before I commit."
+- `CODE_OF_CONDUCT.md` — Contributor Covenant Code of Conduct
+- `CONTRIBUTING.md` — contribution guidelines for the community
 
 ## Template structure
 
