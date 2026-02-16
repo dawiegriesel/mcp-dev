@@ -72,7 +72,7 @@ claude mcp add project-scaffold -- uv run --directory /path/to/mcp-dev project-s
 
 #### Project-scoped config (local development)
 
-This repo includes a `.mcp.json` that registers the server automatically when you open the repo in Claude Code — no manual `claude mcp add` needed. The file uses an absolute path, so you need to update it to match your local clone location:
+For local development, create a `.mcp.json` in the repo root to register the server automatically when you open the repo in Claude Code — no manual `claude mcp add` needed:
 
 ```json
 {
@@ -85,7 +85,7 @@ This repo includes a `.mcp.json` that registers the server automatically when yo
 }
 ```
 
-Update the `--directory` value to your actual clone path before using it.
+Replace the `--directory` value with your actual clone path. This file is gitignored to avoid committing local paths.
 
 ### Claude Desktop
 
