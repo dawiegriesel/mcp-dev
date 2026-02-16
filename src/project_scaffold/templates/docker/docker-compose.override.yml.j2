@@ -11,7 +11,11 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 {% if frontend_type == "react" %}
   frontend:
+    build:
+      context: ./{{ project_name }}-frontend
+      dockerfile: Dockerfile
+      target: builder
+    command: npm run dev -- --host 0.0.0.0 --port {{ frontend_port }}
     volumes:
       - ./{{ project_name }}-frontend/src:/app/src
-    command: npm run dev -- --host 0.0.0.0 --port 3000
 {%- endif %}
