@@ -1,0 +1,104 @@
+# CLAUDE.md
+
+## Project overview
+
+{{ project_name }}{% if description %}: {{ description }}{% endif %}
+
+Full-stack application: FastAPI + {% if frontend_type == "react" %}React (Vite + TypeScript){% else %}HTMX + Tailwind CSS{% endif %}, PostgreSQL{% if include_redis %}, Redis{% endif %}. Deployed to {% if project_type == "work" %}Azure via GitHub Actions{% else %}Render.com{% endif %}.
+
+## Commands
+
+```bash
+make up              # Start all services (docker-compose)
+make down            # Stop services
+make logs            # Tail service logs
+make build           # Rebuild containers
+make test            # Run tests
+make lint            # Lint with ruff
+make format          # Auto-format with ruff
+{% if include_alembic %}
+make migrate         # Apply database migrations
+make migration msg="description"  # Create new migration
+{% endif %}
+{% if frontend_type == "react" %}
+make frontend-dev    # Start React dev server
+make frontend-build  # Production build
+{% endif %}
+```
+
+## Architecture
+
+{% if is_multi_repo %}
+Multi-repo workspace:
+- `{{ project_name }}-api/` -- FastAPI backend
+- `{{ project_name }}-frontend/` -- React + Vite + TypeScript frontend
+{% else %}
+Single-repo with FastAPI backend and server-rendered HTMX templates.
+{% endif %}
+
+Key directories:
+{% if is_multi_repo %}
+- `{{ project_name }}-api/app/` -- Application code
+{% else %}
+- `app/` -- Application code
+{% endif %}
+  - `models/` -- SQLAlchemy async models (inherit `Base` + `TimestampMixin`)
+  - `schemas/` -- Pydantic v2 schemas (`{Name}Base`, `{Name}Create`, `{Name}Update`, `{Name}Read`)
+  - `routers/` -- FastAPI route handlers
+  - `config.py` -- Settings via pydantic-settings (reads `.env`)
+  - `database.py` -- Async SQLAlchemy engine + session factory
+  - `dependencies.py` -- FastAPI dependency injection (`get_db`)
+{% if include_auth %}
+  - `auth/` -- JWT authentication (`jwt.py` for token logic, `routes.py` for login/me endpoints)
+{% endif %}
+{% if frontend_type == "htmx" %}
+  - `templates/` -- Jinja2 HTML templates (base, pages, partials)
+  - `static/` -- CSS and static assets
+{% endif %}
+{% if is_multi_repo %}
+- `{{ project_name }}-frontend/src/` -- React source
+  - `pages/` -- Route page components
+  - `components/` -- Shared UI components
+  - `api/` -- Typed API client
+  - `styles/` -- Global CSS
+{% endif %}
+
+## Code style
+
+- Python 3.12+, Ruff with 100-char line length
+- Pydantic v2 models with `Field(description=...)`
+- Async throughout: SQLAlchemy async sessions, asyncpg, async test fixtures
+- Schema naming: `{Model}Base` -> `{Model}Create`, `{Model}Update`, `{Model}Read`
+
+## Key patterns
+
+- Database sessions via `get_db` dependency -- never create sessions manually
+- Models inherit from `Base` and `TimestampMixin` (auto `created_at`/`updated_at`)
+- Use `select()` with `await db.execute()` for all queries (SQLAlchemy 2.0 style)
+{% if include_auth %}
+- JWT auth: `get_current_user` dependency in `app/auth/routes.py` for protected endpoints
+- Password hashing via bcrypt in `app/auth/jwt.py`
+- Login at `POST /api/auth/login`, current user at `GET /api/auth/me`
+{% endif %}
+{% if include_alembic %}
+- Migrations: create via `make migration msg="..."`, apply via `make migrate`
+- Always review generated migrations before applying
+{% endif %}
+{% if frontend_type == "react" %}
+- API client in `src/api/client.ts` -- use this for all backend calls
+{% endif %}
+
+## Guardrails
+
+- Never commit `.env` -- use `.env.example` as reference
+- Always create Pydantic schemas alongside SQLAlchemy models
+- Run `make lint` before committing
+{% if include_alembic %}
+- Database schema changes require an Alembic migration
+{% endif %}
+{% if include_auth %}
+- Protected endpoints must use `Depends(get_current_user)`
+- Never store plaintext passwords
+{% endif %}
+- Keep routers thin -- complex logic belongs in service functions
+- Use `status_code=201` for creation endpoints, `status_code=204` for deletes

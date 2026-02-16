@@ -53,6 +53,9 @@ class ProjectGenerator:
             api_port=meta.get("api_port", 8000),
             frontend_port=meta.get("frontend_port", 3000),
             use_current_dir=use_current_dir,
+            include_tdd=meta.get("include_tdd", False),
+            include_redis=meta.get("include_redis", False),
+            include_sse=meta.get("include_sse", False),
         )
         return cls(config)
 
@@ -72,6 +75,9 @@ class ProjectGenerator:
             "frontend_port": self.config.frontend_port,
             "is_multi_repo": self.config.is_multi_repo,
             "python_package_name": self.config.python_package_name,
+            "include_tdd": self.config.include_tdd,
+            "include_redis": self.config.include_redis,
+            "include_sse": self.config.include_sse,
         }
 
     def _render(self, template_path: str, context: dict | None = None) -> str:
@@ -158,6 +164,9 @@ class ProjectGenerator:
         # Auth
         if self.config.include_auth:
             self._generate_auth()
+
+        # AI development guidelines
+        self._generate_claude()
 
         # Scaffold metadata
         self._write_metadata()
@@ -390,6 +399,13 @@ class ProjectGenerator:
         self._write(auth_dir / "jwt.py", self._render("api/app/auth/jwt.py.j2"))
         self._write(auth_dir / "routes.py", self._render("api/app/auth/routes.py.j2"))
 
+    def _generate_claude(self) -> None:
+        """Generate CLAUDE.md with AI development guidelines at project root."""
+        self._write(
+            self.project_root / "CLAUDE.md",
+            self._render("claude/CLAUDE.md.j2"),
+        )
+
     def _write_metadata(self) -> None:
         """Write .scaffold.json metadata."""
         meta = {
@@ -404,6 +420,9 @@ class ProjectGenerator:
             "api_port": self.config.api_port,
             "frontend_port": self.config.frontend_port,
             "use_current_dir": self.config.use_current_dir,
+            "include_tdd": self.config.include_tdd,
+            "include_redis": self.config.include_redis,
+            "include_sse": self.config.include_sse,
             "created_at": datetime.now(timezone.utc).isoformat(),
             "components": [],
         }
@@ -458,6 +477,7 @@ class ProjectGenerator:
         files = [
             SCAFFOLD_METADATA_FILE,
             "README.md",
+            "CLAUDE.md",
             ".env.example",
             "Makefile",
             "docker-compose.yml",

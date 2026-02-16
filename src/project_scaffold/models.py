@@ -53,6 +53,18 @@ class ProjectConfig(BaseModel):
         default=3000,
         description="Local development frontend port (React only)",
     )
+    include_tdd: bool = Field(
+        default=False,
+        description="Include TDD setup with pytest-cov, factory-boy, and unit/integration test separation",
+    )
+    include_redis: bool = Field(
+        default=False,
+        description="Include Redis service in docker-compose for caching and background tasks",
+    )
+    include_sse: bool = Field(
+        default=False,
+        description="Include Server-Sent Events endpoint for real-time push updates",
+    )
 
     @property
     def resolved_db_name(self) -> str:
