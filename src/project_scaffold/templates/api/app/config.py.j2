@@ -6,15 +6,15 @@ class Settings(BaseSettings):
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
     database_url: str = "postgresql+asyncpg://{{ db_user }}:{{ db_password }}@localhost:5432/{{ db_name }}"
-{% if include_auth %}
+{%- if include_auth %}
     secret_key: str = "change-me-in-production"
     access_token_expire_minutes: int = 30
-{% endif %}
+{%- endif %}
 
     cors_origins: list[str] = [
-{% if frontend_type == "react" %}
+{%- if frontend_type == "react" %}
         "http://localhost:{{ frontend_port }}",
-{% endif %}
+{%- endif %}
         "http://localhost:{{ api_port }}",
     ]
 
@@ -28,14 +28,14 @@ class Settings(BaseSettings):
         elif self.database_url.startswith("postgresql://"):
             self.database_url = self.database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
         return self
-{% if include_auth %}
+{%- if include_auth %}
 
     @model_validator(mode="after")
     def check_secret_key(self) -> "Settings":
         if self.environment != "development" and self.secret_key == "change-me-in-production":
             raise ValueError("SECRET_KEY must be set to a secure value in non-development environments")
         return self
-{% endif %}
+{%- endif %}
 
 
 settings = Settings()

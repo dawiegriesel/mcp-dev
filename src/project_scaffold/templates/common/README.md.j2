@@ -17,6 +17,31 @@
 {% else -%}
 - **Deployment**: Render.com
 {% endif %}
+{% if is_multi_repo %}
+## Project Structure
+
+This is a **multi-repo** project. The workspace root contains shared config files, while the API and frontend each have their own git repositories:
+
+```
+{{ project_name }}/                  # Workspace root (not a git repo)
+├── docker-compose.yml               # Container orchestration
+├── docker-compose.override.yml      # Dev overrides (volume mounts, hot reload)
+├── Makefile                          # All dev commands
+├── .env.example                      # Environment template
+├── README.md                         # This file
+├── {{ project_name }}-api/          # API git repo
+│   ├── app/
+│   ├── tests/
+│   ├── Dockerfile
+│   └── ...
+└── {{ project_name }}-frontend/     # Frontend git repo
+    ├── src/
+    ├── Dockerfile
+    └── ...
+```
+
+> **Note**: The workspace files (`docker-compose.yml`, `Makefile`, `.env.example`, `README.md`) live outside both git repos. When cloning this project on a new machine, you need to recreate the workspace structure — see [Cloning on a New Machine](#cloning-on-a-new-machine) below.
+{% endif %}
 
 ## Local Development
 
@@ -31,6 +56,9 @@
 ### Getting Started
 
 ```bash
+# Initialize git repo(s)
+make git-init
+
 # Copy environment variables
 cp .env.example .env
 # Edit .env with your values
@@ -59,6 +87,7 @@ make migrate
 make up        # Start docker-compose
 make down      # Stop docker-compose
 make logs      # View logs
+make build     # Rebuild containers
 make test      # Run API tests
 make lint      # Run linter
 make format    # Auto-format code
@@ -67,10 +96,38 @@ make migrate   # Apply database migrations
 make migration # Create a new migration
 {% endif -%}
 {% if frontend_type == "react" -%}
-make frontend-dev    # Run frontend dev server (outside Docker)
+make frontend-dev    # Run frontend dev server
 make frontend-build  # Build frontend for production
 {% endif -%}
+make git-init  # Initialize git repo(s)
 ```
+{% if is_multi_repo %}
+
+## Cloning on a New Machine
+
+Since workspace files live outside the git repos, follow these steps:
+
+```bash
+# 1. Create the workspace directory
+mkdir {{ project_name }} && cd {{ project_name }}
+
+# 2. Clone both repos
+git clone <{{ project_name }}-api-repo-url> {{ project_name }}-api
+git clone <{{ project_name }}-frontend-repo-url> {{ project_name }}-frontend
+
+# 3. Copy workspace files from this README or re-scaffold:
+#    - docker-compose.yml
+#    - docker-compose.override.yml
+#    - Makefile
+#    - .env.example
+
+# 4. Set up environment and start
+cp .env.example .env
+make up
+```
+
+> **Tip**: Consider keeping the workspace files in a separate repo, or store them as a gist for easy retrieval.
+{% endif %}
 
 ## API Documentation
 

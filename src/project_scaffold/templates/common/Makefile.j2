@@ -1,4 +1,4 @@
-.PHONY: up down logs build{% if include_alembic %} migrate migration{% endif %} test lint format{% if frontend_type == "react" %} frontend-dev frontend-build{% endif %}
+.PHONY: up down logs build{% if include_alembic %} migrate migration{% endif %} test lint format{% if frontend_type == "react" %} frontend-dev frontend-build{% endif %} git-init
 
 up:
 	docker compose up -d
@@ -35,4 +35,12 @@ frontend-dev:
 
 frontend-build:
 	docker compose exec frontend npm run build
+{%- endif %}
+
+git-init:
+{%- if is_multi_repo %}
+	cd {{ project_name }}-api && git init && git add . && git commit -m "Initial commit"
+	cd {{ project_name }}-frontend && git init && git add . && git commit -m "Initial commit"
+{%- else %}
+	git init && git add . && git commit -m "Initial commit"
 {%- endif %}

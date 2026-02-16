@@ -4,9 +4,13 @@ services:
 {%- if is_multi_repo %}
     volumes:
       - ./{{ project_name }}-api/app:/app/app
+      - ./{{ project_name }}-api/tests:/app/tests
+      - ./{{ project_name }}-api/pyproject.toml:/app/pyproject.toml
 {%- else %}
     volumes:
       - ./app:/app/app
+      - ./tests:/app/tests
+      - ./pyproject.toml:/app/pyproject.toml
 {%- endif %}
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 {% if frontend_type == "react" %}
