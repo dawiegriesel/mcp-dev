@@ -18,6 +18,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Remove `.mcp.json` from version control and add to `.gitignore` to avoid leaking local paths — README now instructs users to create their own
 - Repository is now public
+- Replace `python-jose` with `PyJWT` in generated projects — `python-jose` is unmaintained
+
+### Fixed
+
+- Add duplicate email check to HTMX user creation form — previously crashed with IntegrityError on duplicate
+- Add authorization checks to user update/delete endpoints — users can now only modify their own account
+- Add secret key validation in generated config — rejects default `change-me-in-production` value in non-development environments
 
 ## [0.3.0] — 2026-02-13
 
