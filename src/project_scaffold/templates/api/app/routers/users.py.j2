@@ -63,9 +63,13 @@ async def update_user(
     user_in: UserUpdate,
     db: AsyncSession = Depends(get_db),
 {% if include_auth %}
-    _current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 {% endif %}
 ):
+{% if include_auth %}
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Can only update your own account")
+{% endif %}
     result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if not user:
@@ -84,9 +88,13 @@ async def delete_user(
     user_id: int,
     db: AsyncSession = Depends(get_db),
 {% if include_auth %}
-    _current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 {% endif %}
 ):
+{% if include_auth %}
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Can only delete your own account")
+{% endif %}
     result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if not user:

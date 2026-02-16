@@ -38,6 +38,15 @@ async def create_user_form(
 {% endif %}
     db: AsyncSession = Depends(get_db),
 ):
+    existing = await db.execute(select(User).where(User.email == email))
+    if existing.scalar_one_or_none():
+        result = await db.execute(select(User))
+        users = result.scalars().all()
+        return templates.TemplateResponse(
+            "partials/user_list.html",
+            {"request": request, "users": users, "error": "Email already registered"},
+        )
+
     user = User(name=name, email=email)
 {% if include_auth %}
     user.hashed_password = get_password_hash(password)

@@ -28,6 +28,14 @@ class Settings(BaseSettings):
         elif self.database_url.startswith("postgresql://"):
             self.database_url = self.database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
         return self
+{% if include_auth %}
+
+    @model_validator(mode="after")
+    def check_secret_key(self) -> "Settings":
+        if self.environment != "development" and self.secret_key == "change-me-in-production":
+            raise ValueError("SECRET_KEY must be set to a secure value in non-development environments")
+        return self
+{% endif %}
 
 
 settings = Settings()

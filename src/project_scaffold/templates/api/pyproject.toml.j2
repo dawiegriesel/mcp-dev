@@ -12,7 +12,7 @@ dependencies = [
     "pydantic-settings>=2.0",
     "alembic>=1.14",
 {% if include_auth %}
-    "python-jose[cryptography]>=3.3",
+    "PyJWT>=2.8",
     "bcrypt>=4.0",
     "python-multipart>=0.0.18",
 {% endif %}
