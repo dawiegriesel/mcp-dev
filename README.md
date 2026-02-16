@@ -2,6 +2,8 @@
 
 An MCP server that scaffolds full-stack projects with consistent structure, Docker setup, CI/CD pipelines, and database configuration. Built with [FastMCP](https://github.com/jlowin/fastmcp).
 
+> **Alpha** — This project is under active development. APIs and generated output may change between versions. Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## What it generates
 
 Every scaffolded project comes with:

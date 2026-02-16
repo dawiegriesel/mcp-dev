@@ -9,7 +9,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - `docs-pre-commit` Claude agent (`.claude/agents/docs-pre-commit.md`) — automatically updates CHANGELOG, README, and other docs before commits
-- Project-scoped MCP server config (`.mcp.json`) — loads `project-scaffold` automatically in Claude Code when working inside this repo
+- MIT license (`LICENSE` and `pyproject.toml`)
+- `CODE_OF_CONDUCT.md` — Contributor Covenant Code of Conduct
+- `CONTRIBUTING.md` — contribution guidelines
+- Alpha notice in README
+
+### Changed
+
+- Remove `.mcp.json` from version control and add to `.gitignore` to avoid leaking local paths — README now instructs users to create their own
+- Repository is now public
 
 ## [0.3.0] — 2026-02-13
 
