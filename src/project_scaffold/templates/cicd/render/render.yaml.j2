@@ -3,7 +3,11 @@ services:
     name: {{ project_name }}-api
     runtime: python
     buildCommand: pip install uv && uv sync
+{%- if include_alembic %}
+    startCommand: bash startup.sh
+{%- else %}
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port 8000
+{%- endif %}
 {%- if is_multi_repo %}
     rootDir: {{ project_name }}-api
 {%- endif %}
@@ -16,6 +20,13 @@ services:
         generateValue: true
       - key: ENVIRONMENT
         value: production
+{%- if include_redis %}
+      - key: REDIS_URL
+        fromService:
+          name: {{ project_name }}-redis
+          type: redis
+          property: connectionString
+{%- endif %}
 {% if frontend_type == "react" %}
   - type: web
     name: {{ project_name }}-frontend
@@ -32,3 +43,9 @@ databases:
   - name: {{ project_name }}-db
     plan: free
     databaseName: {{ db_name }}
+{%- if include_redis %}
+
+redis:
+  - name: {{ project_name }}-redis
+    plan: free
+{%- endif %}

@@ -261,6 +261,9 @@ class ProjectGenerator:
         ]:
             self._write(routers_dir / out, self._render(tmpl))
 
+        if self.config.include_sse:
+            self._write(routers_dir / "sse.py", self._render("api/app/routers/sse.py.j2"))
+
         # Tests
         tests_dir = api_root / "tests"
         self._write_empty(tests_dir / "__init__.py")
@@ -533,6 +536,9 @@ class ProjectGenerator:
                     api("alembic/versions/.gitkeep"),
                 ]
             )
+
+        if self.config.include_sse:
+            files.append(api("app/routers/sse.py"))
 
         if self.config.include_auth:
             files.extend(

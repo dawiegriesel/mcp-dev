@@ -14,9 +14,12 @@ from app.routers import health, users
 {% if frontend_type == "htmx" %}
 from app.routers import pages
 {% endif %}
-{% if include_auth %}
+{%- if include_auth %}
 from app.auth import routes as auth_routes
-{% endif %}
+{%- endif %}
+{%- if include_sse %}
+from app.routers import sse
+{%- endif %}
 
 
 @asynccontextmanager
@@ -47,6 +50,9 @@ app.include_router(users.router, prefix="/api/users", tags=["users"])
 {% if frontend_type == "htmx" %}
 app.include_router(pages.router, tags=["pages"])
 {% endif %}
-{% if include_auth %}
+{%- if include_auth %}
 app.include_router(auth_routes.router, prefix="/api/auth", tags=["auth"])
-{% endif %}
+{%- endif %}
+{%- if include_sse %}
+app.include_router(sse.router, prefix="/api/sse", tags=["sse"])
+{%- endif %}

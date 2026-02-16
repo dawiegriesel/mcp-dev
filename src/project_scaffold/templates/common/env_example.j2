@@ -5,6 +5,11 @@ DATABASE_URL=postgresql+asyncpg://{{ db_user }}:{{ db_password }}@localhost:5432
 SECRET_KEY=change-me-in-production
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 
+{%- if include_redis %}
+# Redis
+REDIS_URL=redis://localhost:6379/0
+{%- endif %}
+
 # Environment
 ENVIRONMENT=development
 

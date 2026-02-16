@@ -18,6 +18,9 @@ dependencies = [
     "bcrypt>=4.0",
     "python-multipart>=0.0.18",
 {%- endif %}
+{%- if include_sse %}
+    "sse-starlette>=2.0",
+{%- endif %}
 {%- if frontend_type == "htmx" %}
     "jinja2>=3.1",
 {%- if not include_auth %}
@@ -32,6 +35,7 @@ dev = [
     "pytest-asyncio>=0.25",
     "httpx>=0.28",
     "ruff>=0.9",
+    "aiosqlite>=0.20",
 {%- if include_tdd %}
     "pytest-cov>=6.0",
     "factory-boy>=3.3",
@@ -50,7 +54,4 @@ target-version = "py312"
 line-length = 100
 
 [tool.pytest.ini_options]
-asyncio_mode = "auto"
-
-[tool.pytest-asyncio]
 asyncio_mode = "auto"

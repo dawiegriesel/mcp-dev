@@ -11,11 +11,18 @@ services:
       - "{{ api_port }}:8000"
     environment:
       - DATABASE_URL=postgresql+asyncpg://{{ db_user }}:{{ db_password }}@db:5432/{{ db_name }}
-      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - SECRET_KEY=${SECRET_KEY:?Set SECRET_KEY in .env}
       - ENVIRONMENT=development
+{%- if include_redis %}
+      - REDIS_URL=redis://redis:6379/0
+{%- endif %}
     depends_on:
       db:
         condition: service_healthy
+{%- if include_redis %}
+      redis:
+        condition: service_started
+{%- endif %}
 {% if frontend_type == "react" %}
   frontend:
     build:
@@ -52,5 +59,17 @@ services:
     depends_on:
       - db
 
+{%- if include_redis %}
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+{%- endif %}
 volumes:
   pgdata:
+{%- if include_redis %}
+  redis_data:
+{%- endif %}
