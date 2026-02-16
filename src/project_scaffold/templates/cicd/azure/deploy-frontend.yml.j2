@@ -7,11 +7,11 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-{% if is_multi_repo %}
+{%- if is_multi_repo %}
     defaults:
       run:
         working-directory: {{ project_name }}-frontend
-{% endif %}
+{%- endif %}
     steps:
       - uses: actions/checkout@v4
 
@@ -26,9 +26,9 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           {% raw %}azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_TOKEN }}{% endraw %}
-{% if is_multi_repo %}
+{%- if is_multi_repo %}
           app_location: "{{ project_name }}-frontend"
-{% else %}
+{%- else %}
           app_location: "/"
-{% endif %}
+{%- endif %}
           output_location: "dist"

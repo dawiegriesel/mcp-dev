@@ -4,9 +4,9 @@ services:
     runtime: python
     buildCommand: pip install uv && uv sync
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port 8000
-{% if is_multi_repo %}
+{%- if is_multi_repo %}
     rootDir: {{ project_name }}-api
-{% endif %}
+{%- endif %}
     envVars:
       - key: DATABASE_URL
         fromDatabase:

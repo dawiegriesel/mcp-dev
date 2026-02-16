@@ -1,11 +1,11 @@
 services:
   api:
     build:
-{% if is_multi_repo %}
+{%- if is_multi_repo %}
       context: ./{{ project_name }}-api
-{% else %}
+{%- else %}
       context: .
-{% endif %}
+{%- endif %}
       dockerfile: Dockerfile
     ports:
       - "{{ api_port }}:8000"

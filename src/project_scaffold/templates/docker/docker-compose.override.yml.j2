@@ -1,17 +1,17 @@
 # Override for local development — adds volume mounts for hot reload
 services:
   api:
-{% if is_multi_repo %}
+{%- if is_multi_repo %}
     volumes:
       - ./{{ project_name }}-api/app:/app/app
-{% else %}
+{%- else %}
     volumes:
       - ./app:/app/app
-{% endif %}
+{%- endif %}
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 {% if frontend_type == "react" %}
   frontend:
     volumes:
       - ./{{ project_name }}-frontend/src:/app/src
     command: npm run dev -- --host 0.0.0.0 --port 3000
-{% endif %}
+{%- endif %}
